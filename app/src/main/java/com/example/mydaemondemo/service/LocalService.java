@@ -34,13 +34,10 @@ public class LocalService extends Service {
         super.onCreate();
         try {
             Notification notification = new Notification();
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                startForeground(NOTIFICATION_ID, notification);
-            } else {
-                startForeground(NOTIFICATION_ID, notification);
-                // start InnerService
-                startService(new Intent(this, InnerService.class));
-            }
+            startForeground(NOTIFICATION_ID, notification);
+            // start InnerService
+            startService(new Intent(this, InnerService.class));
+
         } catch (Throwable e) {
             e.printStackTrace();
         }

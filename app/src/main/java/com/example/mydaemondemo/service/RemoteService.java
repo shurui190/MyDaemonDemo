@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -33,13 +32,11 @@ public class RemoteService extends Service {
         super.onCreate();
         try {
             Notification notification = new Notification();
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                startForeground(NOTIFICATION_ID, notification);
-            } else {
-                startForeground(NOTIFICATION_ID, notification);
-                // start InnerService
-                startService(new Intent(this, InnerService.class));
-            }
+
+            startForeground(NOTIFICATION_ID, notification);
+            // start InnerService
+            startService(new Intent(this, InnerService.class));
+
         } catch (Throwable e) {
             e.printStackTrace();
         }

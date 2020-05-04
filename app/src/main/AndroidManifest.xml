@@ -24,6 +24,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.OnePxActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|navigation|keyboard"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="false"
+            android:launchMode="singleInstance"
+            android:theme="@style/OnePxActStyle" />
+
         <service android:name=".service.DaemonJobService"
             android:enabled="true"
             android:exported="true"
@@ -34,6 +42,19 @@
 
         <service android:name=".service.LocalService" />
         <service android:name=".service.LocalService$InnerService" />
+
+        <!-- 无声音乐 -->
+        <service
+            android:name=".service.LiveService2"
+            android:enabled="true"
+            android:priority="1000"
+            android:exported="true"
+            android:process=":keepalive2"/>
+
+        <service android:name=".service.FrontService" android:process=":front"/>
+
+
+        <receiver android:name=".receiver.OnePixelReceiver"/>
     </application>
 
 </manifest>
