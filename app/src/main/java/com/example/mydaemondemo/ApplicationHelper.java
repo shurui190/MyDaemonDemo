@@ -1,7 +1,10 @@
 package com.example.mydaemondemo;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Handler;
+
+import java.util.List;
 
 /**
  * 线程转换管理器
@@ -72,4 +75,22 @@ public class ApplicationHelper {
         return sContext;
     }
 
+
+    public static String getProcessName(Context context){
+        int pid = android.os.Process.myPid();
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (am == null) {
+            return null;
+        }
+        List<ActivityManager.RunningAppProcessInfo> processes = am.getRunningAppProcesses();
+        if (processes == null){
+            return null;
+        }
+        for (ActivityManager.RunningAppProcessInfo info : processes){
+            if (info.pid == pid){
+                return info.processName;
+            }
+        }
+        return null;
+    }
 }

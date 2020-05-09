@@ -3,15 +3,15 @@ package com.example.mydaemondemo;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
-import android.util.Log;
 
 import com.example.mydaemondemo.receiver.OnePixelReceiver;
 import com.example.mydaemondemo.service.DaemonJobService;
 import com.example.mydaemondemo.service.FrontService;
-import com.example.mydaemondemo.service.LiveService2;
 import com.example.mydaemondemo.service.LocalService;
 import com.example.mydaemondemo.service.RemoteService;
 import com.example.mydaemondemo.util.MyLifecycleHandler;
+import com.shihoo.daemon.ForegroundNotificationUtils;
+import com.shihoo.daemon.watch.WatchProcessPrefHelper;
 
 /**
  * Created by shurui on 2020/5/1.
@@ -42,42 +42,21 @@ public class MyDaemonApp extends BaseApp {
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(new OnePixelReceiver(), intentFilter);
 
+        /***
+         * 不建议使用无声音乐，因为这会增加软件的耗电量，影响用户体验
+         */
         //无声音乐保活
-        Intent intent = new Intent(this, LiveService2.class);
-        startService(intent);
+//        Intent intent = new Intent(this, LiveService2.class);
+//        startService(intent);
 
-//        new Thread(() -> {
-//            while (true) {
-//                try {
-//                    if (!MyLifecycleHandler.isApplicationVisible()) {
-//                        stopPlayNoNoticeService();
-//                    } else {
-//                        startPlayNoNoticeService();
-//                    }
-//                    Thread.sleep(5000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
+
+        String processName = ApplicationHelper.getProcessName(this.getApplicationContext());
+        // 这里要设置下看护进程所启动的主进程信息
+        WatchProcessPrefHelper.mWorkServiceClass = MainWorkService.class;
+        // 设置通知栏的UI
+        ForegroundNotificationUtils.setResId(R.drawable.ic_launcher_foreground);
 
 
     }
 
-
-    private void stopPlayNoNoticeService() {
-        Log.i("LiveService2", "-----app处于前台，停止音乐");
-        if (LiveService2.checkRunning()) {
-            Intent intent = new Intent(this, LiveService2.class);
-            stopService(intent);
-        }
-    }
-
-    private void startPlayNoNoticeService() {
-        Log.i("LiveService2", "-----app处于后台，播放音乐");
-
-        Intent intent = new Intent(this, LiveService2.class);
-        startService(intent);
-
-    }
 }

@@ -14,6 +14,7 @@ import com.example.mydaemondemo.MainActivity;
 import com.example.mydaemondemo.R;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 /**
  * Created by shurui on 2020/3/11.
@@ -41,7 +42,8 @@ public class FrontService extends Service {
             //创建NotificationChannel
             NotificationChannel channel = new NotificationChannel(notificationId, notificationName, importance);
             notificationManager.createNotificationChannel(channel);
-            startForeground(1, getNotification());
+            //id为0时将不显示在通知栏
+            startForeground(0, getNotification());
         }
     }
 
@@ -50,11 +52,16 @@ public class FrontService extends Service {
 
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        Notification.Builder builder = new Notification.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(),"11")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("前台服务,以提高优先级")
                 .setContentText("我正在运行");
+
+//        Notification.Builder builder = new Notification.Builder(this)   //不显示时间
+//                .setSmallIcon(R.drawable.ic_launcher_foreground)
+//                .setContentTitle("前台服务,以提高优先级")
+//                .setContentText("我正在运行");
+
         builder.setContentIntent(pendingIntent);
         //设置Notification的ChannelID,否则不能正常显示
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -64,5 +71,9 @@ public class FrontService extends Service {
         return notification;
     }
 
-
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        super.onDestroy();
+    }
 }
